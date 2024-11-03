@@ -1,0 +1,5 @@
+/build
+.clang-format
+.DS_Store
+/.vscode/*
+!/.vscode/vex_project_settings.json
