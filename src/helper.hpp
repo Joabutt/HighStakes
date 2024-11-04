@@ -2,6 +2,7 @@
 #define HELPER_HPP
 
 #include "robot.hpp"
+#include "auton.hpp"
 
 void roller_spin(double velocity = 100);
 void roller_spin(double velocity, double time, vex::timeUnits units,

@@ -16,7 +16,6 @@ Robot robo_g = {
     },
     .intk = {
         vex::motor(2, vex::gearSetting::ratio18_1, true),
-        vex::motor(3, vex::gearSetting::ratio18_1, false),
     },
     .pnch = {
         vex::motor(11, vex::gearSetting::ratio18_1, true),
@@ -24,9 +23,7 @@ Robot robo_g = {
     .screen = vex::controller::lcd(),
     .wing = vex::digital_out(vex::brain().ThreeWirePort.A),
     .hang = vex::digital_out(vex::brain().ThreeWirePort.F),
-    .gyro = vex::inertial(18),
-    .leftRtn = vex::rotation(17),
-    .horizRtn = vex::rotation(19),
+    .gyro = vex::inertial(4),
 };
 
 

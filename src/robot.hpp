@@ -1,31 +1,13 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-#pragma once
-
 #include "vex.h"
-
-struct Position {
-    double x;
-    double y;
-    double theta;
-};
-
-extern Position robotPosition;
-
-void updateOdometry();
 
 typedef enum { LF, LM, LB, RF, RM, RB, MAX } drive_motors;
 
-
-#define MOTORS_INTK 2
+#define MOTORS_INTK 1
 #define MOTORS_PNCH 1
 #define MOTORS_BASE drive_motors::MAX
-
-#define SPEED_PNCH 60
-#define HORIZONTAL_WHEEL_OFFSET 5.5;  // Adjust this value based on your robot's design
-#define WHEEL_BASE_WIDTH 2.75;  // Adjust this to your robot
-
 
 /// A structure to group hardware of the robot.
 struct Robot {
@@ -45,10 +27,6 @@ struct Robot {
     vex::digital_out hang;
     // Inertial sensor.
     vex::inertial gyro;
-    // Rotation sensor.
-    vex::rotation leftRtn;
-    // Rotation sensor.
-    vex::rotation horizRtn;
 };
 
 #define SPEED 1

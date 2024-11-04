@@ -15,4 +15,24 @@ void turn_until(double degree, double leftSpeed, double rightSpeed, bool invert,
 void auton(void);
 void skill(void);
 
+class PIDController {
+public:
+    PIDController(double kp, double ki, double kd)
+        : kp(kp), ki(ki), kd(kd), integral(0), prev_error(0) {}
+
+    double calculate(double target, double current, double deltaTime) {
+        double error = target - current;
+        integral += error * deltaTime;
+        double derivative = (error - prev_error) / deltaTime;
+        double output = (kp * error) + (ki * integral) + (kd * derivative);
+        prev_error = error;
+        return output;
+    }
+
+private:
+    double kp, ki, kd;
+    double integral;
+    double prev_error;
+};
+
 #endif
