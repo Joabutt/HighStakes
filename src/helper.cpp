@@ -45,6 +45,10 @@ void slap(double degree) {
                                vex::velocityUnits::pct, i == (MOTORS_PNCH - 1));
 }
 
-void wing(bool open) {
-    robo_g.wing.set(robo_g.wing.value() ^ 1);
+void mogo(bool open) {
+    robo_g.mogo.set(robo_g.mogo.value() ^ 1);
+}
+
+void dink(bool open){
+    robo_g.dink.set(robo_g.dink.value() ^ 1);
 }

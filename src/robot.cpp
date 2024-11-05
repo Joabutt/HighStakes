@@ -22,11 +22,9 @@ Robot robo_g = {
         vex::motor(11, vex::gearSetting::ratio18_1, true),
     },
     .screen = vex::controller::lcd(),
-    .wing = vex::digital_out(vex::brain().ThreeWirePort.A),
-    .hang = vex::digital_out(vex::brain().ThreeWirePort.F),
-    .gyro = vex::inertial(18),
-    .leftRtn = vex::rotation(17),
-    .horizRtn = vex::rotation(19),
+    .mogo = vex::digital_out(vex::brain().ThreeWirePort.A),
+    .dink = vex::digital_out(vex::brain().ThreeWirePort.F),
+    .gyro = vex::inertial(4),
 };
 
 

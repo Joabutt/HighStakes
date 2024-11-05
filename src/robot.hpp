@@ -5,15 +5,6 @@
 
 #include "vex.h"
 
-struct Position {
-    double x;
-    double y;
-    double theta;
-};
-
-extern Position robotPosition;
-
-void updateOdometry();
 
 typedef enum { LF, LM, LB, RF, RM, RB, MAX } drive_motors;
 
@@ -39,16 +30,12 @@ struct Robot {
     vex::motor pnch[MOTORS_PNCH];
     /// LCD object for controller.
     vex::controller::lcd screen;
-    /// DO object for wing.
-    vex::digital_out wing;
-    // DO object for hang.
-    vex::digital_out hang;
+    /// DO object for mogo.
+    vex::digital_out mogo;
+    // DO object for dink.
+    vex::digital_out dink;
     // Inertial sensor.
     vex::inertial gyro;
-    // Rotation sensor.
-    vex::rotation leftRtn;
-    // Rotation sensor.
-    vex::rotation horizRtn;
 };
 
 #define SPEED 1
