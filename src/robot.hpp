@@ -4,14 +4,16 @@
 #pragma once
 
 #include "vex.h"
+#include <vector>
 
 
 typedef enum { LF, LM, LB, RF, RM, RB, MAX } drive_motors;
 
 
-#define MOTORS_INTK 2
+#define MOTORS_INTK 1
 #define MOTORS_PNCH 1
 #define MOTORS_BASE drive_motors::MAX
+#define MOTORS_LADY 1
 
 #define SPEED_PNCH 60
 #define HORIZONTAL_WHEEL_OFFSET 5.5;  // Adjust this value based on your robot's design
@@ -28,14 +30,21 @@ struct Robot {
     vex::motor intk[MOTORS_INTK];
     /// Motor for punching mechanism.
     vex::motor pnch[MOTORS_PNCH];
+    // Motor for Ladybrown.
+    vex::motor lady[MOTORS_LADY];
     /// LCD object for controller.
     vex::controller::lcd screen;
     /// DO object for mogo.
     vex::digital_out mogo;
     // DO object for dink.
     vex::digital_out dink;
+    // DO object for intake piston.
+    vex::digital_out intkp;
     // Inertial sensor.
     vex::inertial gyro;
+    // Rotation sensor.
+    vex::rotation rotation;
+
 };
 
 #define SPEED 1

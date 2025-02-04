@@ -60,13 +60,21 @@ void red_positive(void)
 // Autonomous route for Blue Positive
 void blue_negative(void)
 {
-    // Implement the blue_positive route logic here
+    move(630, -30, -30, false);  // move to stake
+    vexDelay(100);               // wait for robot to reach stake
+    mogo(true);                  // clamp stake
+    vexDelay(500);               // wait for stake to be clamped
+    roller_spin(100);            // wait for stake to be clamped
 }
 
 // Autonomous route for Blue Negative
 void blue_positive(void)
 {
-    // Implement the blue_negative route logic here
+    move(6, -30, -30, false);  // move to stake
+    vexDelay(100);               // wait for robot to reach stake
+    mogo(true);                  // clamp stake
+    vexDelay(500);               // wait for stake to be clamped
+    roller_spin(100);            // wait for stake to be clamped
 }
 
 void auton(void)
@@ -79,17 +87,13 @@ void skill(void)
     // Implement your skills logic here
 }
 
-void move(double degree, double left, double right, bool invert)
-{
+void move(double degree, double left, double right, bool invert) {
     double la, ra; /**< fabsolute velocites for left and right */
     uint8_t fi;    /**< index of faster side */
 
-    if (invert)
-        std::swap(left, right);
-    if (cfg.rev)
-        goto negate;
-    if (degree < 0)
-    {
+    if (invert) std::swap(left, right);
+    if (cfg.rev) goto negate;
+    if (degree < 0) {
         degree = -degree;
 
     negate:

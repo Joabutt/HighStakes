@@ -52,3 +52,4 @@ void mogo(bool open) {
 void dink(bool open){
     robo_g.dink.set(robo_g.dink.value() ^ 1);
 }
+
