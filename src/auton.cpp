@@ -87,6 +87,11 @@ void skill(void)
     // Implement your skills logic here
 }
 
+
+const double kP = 0.5;
+const double kI = 0.0;
+const double kD = 0.1;
+
 void move(double degree, double left, double right, bool invert) {
     double la, ra; /**< fabsolute velocites for left and right */
     uint8_t fi;    /**< index of faster side */
@@ -107,17 +112,32 @@ void move(double degree, double left, double right, bool invert) {
 
     robo_g.base[fi].resetPosition();
 
-    for (uint8_t i = 0; i < MOTORS_BASE; i++)
-        robo_g.base[i].spin(vex::directionType::fwd,
-                            i < drive_motors::RF ? left : right,
-                            vex::percentUnits::pct);
+    double error = 0;
+    double lastError = 0;
+    double integral = 0;
+    double derivative = 0;
+    double output = 0;
 
-    while (std::fabs(robo_g.base[fi].position(vex::rotationUnits::deg)) <
-           degree)
+    while (std::fabs(robo_g.base[fi].position(vex::rotationUnits::deg)) < degree) {
+        double currentPosition = std::fabs(robo_g.base[fi].position(vex::rotationUnits::deg));
+        error = degree - currentPosition;
+        integral += error;
+        derivative = error - lastError;
+        output = (kP * error) + (kI * integral) + (kD * derivative);
+
+        for (uint8_t i = 0; i < MOTORS_BASE; i++) {
+            robo_g.base[i].spin(vex::directionType::fwd,
+                                i < drive_motors::RF ? left + output : right + output,
+                                vex::percentUnits::pct);
+        }
+
+        lastError = error;
         vex::task::sleep(25);
+    }
 
-    for (uint8_t i = 0; i < MOTORS_BASE; i++)
+    for (uint8_t i = 0; i < MOTORS_BASE; i++) {
         robo_g.base[i].stop(vex::brakeType::brake);
+    }
 }
 
 void turn_until(double degree, double leftSpeed, double rightSpeed, bool invert, double calibrationFactor)
