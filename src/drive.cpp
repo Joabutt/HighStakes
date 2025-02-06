@@ -31,7 +31,6 @@ void move_to_stage(uint8_t targetStage) {
     {
         robo_g.rotation.resetPosition(); // Reset the rotation sensor when reaching stage 0
     }
-    robo_g.screen.clearScreen();
 }
 
 

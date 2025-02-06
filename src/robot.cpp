@@ -29,5 +29,5 @@ Robot robo_g = {
     .dink = vex::digital_out(vex::brain().ThreeWirePort.D),
     .intkp = vex::digital_out(vex::brain().ThreeWirePort.C),
     .gyro = vex::inertial(4),
-    .rotation = vex::rotation(12),
+    .rotation = vex::rotation(15),
 };

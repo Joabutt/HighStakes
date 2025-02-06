@@ -7,7 +7,7 @@
 
 void red_negative(void)
 {
-    move(630, -30, -30, false);   // move to stake
+    move(0.01, -10, -10, false);  // move to stake
     vexDelay(100);                // wait for robot to reach stake
     mogo(true);                   // clamp stake
     vexDelay(500);                // wait for stake to be clamped
@@ -29,6 +29,7 @@ void red_negative(void)
 // Autonomous route for Red Negative
 void red_positive(void)
 {
+    /*
     move(630, -30, -30, false);  // move to stake
     vexDelay(100);               // wait for robot to reach stake
     mogo(true);                  // clamp stake
@@ -51,7 +52,7 @@ void red_positive(void)
     vexDelay(500);               // wait for stake to be clamped
     move(1300, 60, 30, false);    // move towards bar
 
-    /* dink(true); // open dinkler
+    dink(true); // open dinkler
     move(600, 30, 30, false);    // move to positive corner
     move(300, -30, 30, false); // clear positive corner
     dink(false); */
@@ -60,26 +61,30 @@ void red_positive(void)
 // Autonomous route for Blue Positive
 void blue_negative(void)
 {
+    /*
     move(630, -30, -30, false);  // move to stake
     vexDelay(100);               // wait for robot to reach stake
     mogo(true);                  // clamp stake
     vexDelay(500);               // wait for stake to be clamped
     roller_spin(100);            // wait for stake to be clamped
+    */
 }
 
 // Autonomous route for Blue Negative
 void blue_positive(void)
 {
+    /*
     move(6, -30, -30, false);  // move to stake
     vexDelay(100);               // wait for robot to reach stake
     mogo(true);                  // clamp stake
     vexDelay(500);               // wait for stake to be clamped
     roller_spin(100);            // wait for stake to be clamped
+    */
 }
 
 void auton(void)
 {
-    red_positive();
+    red_negative();
 }
 
 void skill(void)
@@ -87,15 +92,25 @@ void skill(void)
     // Implement your skills logic here
 }
 
-
-const double kP = 0.5;
+const double kP = 0.8;
 const double kI = 0.0;
-const double kD = 0.1;
+const double kD = 0.15;
+const double MIN_DEGREE_THRESHOLD = 1.0; // Minimum degree threshold
+const double TIMEOUT = 5000;             // Timeout in milliseconds
+const double DEGREE_MULTIPLIER = 0.01;   // Multiplier to scale down the degree value
+
+// Custom clamp function
+template <typename T>
+T clamp(T value, T min, T max)
+{
+    if (value < min)
+        return min;
+    if (value > max)
+        return max;
+    return value;
+}
 
 void move(double degree, double left, double right, bool invert) {
-    double la, ra; /**< fabsolute velocites for left and right */
-    uint8_t fi;    /**< index of faster side */
-
     if (invert) std::swap(left, right);
     if (cfg.rev) goto negate;
     if (degree < 0) {
@@ -106,39 +121,48 @@ void move(double degree, double left, double right, bool invert) {
         right = -right;
     }
 
-    la = std::fabs(left);
-    ra = std::fabs(right);
-    fi = la > ra ? LF : RF;
+    // Reset motor encoders
+    for (uint8_t i = 0; i < MOTORS_BASE; i++) {
+        robo_g.base[i].resetPosition();
+    }
 
-    robo_g.base[fi].resetPosition();
-
-    double error = 0;
-    double lastError = 0;
-    double integral = 0;
-    double derivative = 0;
+    double error = 0, lastError = 0, integral = 0, derivative = 0;
     double output = 0;
+    vex::timer moveTimer;
+    moveTimer.clear();
 
-    while (std::fabs(robo_g.base[fi].position(vex::rotationUnits::deg)) < degree) {
-        double currentPosition = std::fabs(robo_g.base[fi].position(vex::rotationUnits::deg));
+    while (std::fabs(robo_g.base[LF].position(vex::rotationUnits::deg)) < degree) {
+        double currentPosition = std::fabs(robo_g.base[LF].position(vex::rotationUnits::deg));
         error = degree - currentPosition;
-        integral += error;
+        integral = (fabs(error) < 5) ? integral + error : 0;
         derivative = error - lastError;
         output = (kP * error) + (kI * integral) + (kD * derivative);
+        output = clamp(output, -100.0, 100.0);
+        lastError = error;
 
+        // **Gyro Correction**
+        double currentHeading = robo_g.gyro.rotation(vex::rotationUnits::deg);
+        double headingError = 0 - currentHeading; // Keeping it straight
+        double headingCorrection = headingError * 0.5; 
+
+        // Apply PID + gyro correction to motor speeds
         for (uint8_t i = 0; i < MOTORS_BASE; i++) {
-            robo_g.base[i].spin(vex::directionType::fwd,
-                                i < drive_motors::RF ? left + output : right + output,
-                                vex::percentUnits::pct);
+            double correctedSpeed = (i < drive_motors::RF) ? (left + output - headingCorrection)
+                                                           : (right + output + headingCorrection);
+            robo_g.base[i].spin(vex::directionType::fwd, correctedSpeed, vex::percentUnits::pct);
         }
 
-        lastError = error;
+        // Timeout check
+        if (moveTimer.time(vex::timeUnits::msec) > TIMEOUT) break;
         vex::task::sleep(25);
     }
 
+    // Stop motors
     for (uint8_t i = 0; i < MOTORS_BASE; i++) {
         robo_g.base[i].stop(vex::brakeType::brake);
     }
 }
+
 
 void turn_until(double degree, double leftSpeed, double rightSpeed, bool invert, double calibrationFactor)
 {
