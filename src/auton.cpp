@@ -8,82 +8,109 @@
 
 void red_negative(void)
 {
-    move(630, 40, 40, true);   // move to stake
-    vexDelay(300);             // wait for clamped
-    mogo(true);                // clamp stake
-    roller_spin(-100);         // intake starting donut
-    vexDelay(800);             // wait for donut to be intaken
-    move(240, 20, -20, false); // turn to red understacked donut at white line
-    move(420, 70, 50, false);  // move to red understacked donut at white line & intake
-    vexDelay(1000);            // wait
-    intkp(true);               // lift intake
+    move(630, 40, 40, true);    // move to stake
+    vexDelay(300);              // wait for clamped
+    mogo(true);                 // clamp stake
+    roller_spin(-100);          // intake starting donut
+    vexDelay(600);              // wait for donut to be intaken
+    move(240, 20, -20, false);  // turn to red understacked donut at white line
+    move(420, 70, 50, false);   // move to red understacked donut at white line & intake
     move(470, -55, -10, false); // move back
-    intkp(true);
+    intkp(true);                // lift intake
+    vexDelay(1000);             // wait
+    intkp(true);                // push down intake
     move(500, 30, 15);          // move to red understacked donut & intake
-    move(70, 50, -50, false);  // turn to fourth donut
-    move(70, 40, 40, false);    // intake to fourth donut
-    move(100, 50, 50);      // move to fourth donut
-    roller_spin(-100);
-    move(350, 20, -20, false);    // turn to red overstacked donut at alliance stake
-    vexDelay(400);
-    intkp(true); 
-    move(960, 50, 50, false); // move to red overstacked donut at alliance stake & intake
-    vexDelay(600);            // wait for donut to be intaken
-    intkp(true);
-    vexDelay(700);
-    move(200, 50, 50, true); // Move back
-
-
+    move(70, 50, -50, false);   // turn to fourth donut
+    move(70, 40, 40, false);    // move to fourth donut
+    move(100, 50, 50, false);   // intake to fourth donut
+    move(350, 20, -20, false);  // turn to red overstacked donut at alliance stake
+    vexDelay(400);              // wait
+    intkp(true);                // lift intake
+    move(960, 50, 50, false);   // move to red overstacked donut at alliance stake & intake
+    vexDelay(600);              // wait for donut to be intaken
+    intkp(true);                // press down intake
+    vexDelay(700);              // wait
+    move(200, 50, 50, true);    // Move back
 }
 
 // Autonomous route for Red Negative
 void red_positive(void)
 {
-    lady(2);
+    lady(2);                     // ladybrown alliance donut
     move(630, -30, -30, false);  // move to stake
-    lady(0);
     vexDelay(100);               // wait for robot to reach stake
     mogo(true);                  // clamp stake
+    lady(0);                     // retract ladybrown
     vexDelay(500);               // wait for stake to be clamped
-    roller_spin(-100);            // wait for stake to be clamped
-    move(200, -20, 20, false);   // turn to red understacked
-    move(290, 50, 50, false);    // move to red understacked
-    vexDelay(600);              // wait for donut to be intaken
-    move(270, 20, -20, false);   // turn to red understacked donut at white line
-    intkp(true);                // lift intake
-    move(960, 50, 50, false);    // move to red understacked donut at white line & intake
-    vexDelay(600);              // wait for donut to be intaken
-    intkp(true);                // press down intake
-    move(100, 50, 50, true);    // move back
+    roller_spin(-100);           // intake starting donut
+    move(200, -20, 20, false);   // turn to red understacked donut
+    move(290, 50, 50, false);    // move to red understacked donut & intake
+    vexDelay(600);               // wait for donut to be intaken
+    move(270, 20, -20, false);   // turn to red overstacked donut at white line
+    intkp(true);                 // lift intake
+    move(960, 50, 50, false);    // move to red overstacked donut at white line
+    vexDelay(600);               // wait
+    intkp(true);                 // press down intake
+    move(100, 50, 50, true);     // move back and intake
     move(310, -50, 50, false);   // turn to positive corner
-    move(650, 50, 50, false);   // move to positive corner
-    dink(true);
-    vexDelay(700);
-    move(200, 80, -80, false);
+    move(650, 50, 50, false);    // move to positive corner
+    dink(true);                  // open dinkler
+    vexDelay(700);               // wait
+    move(200, 80, -80, false);   // clear positive corner
 }
 
 // Autonomous route for Blue Positive
 void blue_negative(void)
 {
-    /*
-    move(630, -30, -30, false);  // move to stake
-    vexDelay(100);               // wait for robot to reach stake
-    mogo(true);                  // clamp stake
-    vexDelay(500);               // wait for stake to be clamped
-    roller_spin(100);            // wait for stake to be clamped
-    */
+    move(630, 40, 40, true);    // move to stake
+    vexDelay(300);              // wait for clamped
+    mogo(true);                 // clamp stake
+    roller_spin(-100);          // intake starting donut
+    vexDelay(600);              // wait for donut to be intaken
+    move(240, -20, 20, false);  // turn to blue understacked donut at white line
+    move(420, 50, 70, false);   // move to blue understacked donut at white line & intake
+    move(470, -10, -55, false); // move back
+    intkp(true);                // lift intake
+    vexDelay(1000);
+    intkp(true);                // push down intake
+    move(500, 15, 30);          // move to blue understacked donut & intake
+    move(70, -50, 50, false);   // turn to fourth donut
+    move(70, 40, 40, false);    // move to fourth donut
+    move(100, 50, 50, false);   // intake fourth donut
+    move(350, -20, 20, false);  // turn to blue overstacked donut at alliance stake
+    vexDelay(400);              // wait
+    intkp(true);                // lift intake  
+    move(960, 50, 50, false);   // move to blue overstacked donut at alliance stake & intake
+    vexDelay(600);              // wait for donut to be intaken
+    intkp(true);                // press down intake
+    vexDelay(700);              // wait
+    move(200, 50, 50, true);    // move back to intake donut
 }
 
 // Autonomous route for Blue Negative
 void blue_positive(void)
 {
-    /*
-    move(6, -30, -30, false);  // move to stake
+    lady(2);                     // ladybrown alliance donut
+    move(630, -30, -30, false);  // move to stake
     vexDelay(100);               // wait for robot to reach stake
     mogo(true);                  // clamp stake
+    lady(0);                     // retract ladybrown
     vexDelay(500);               // wait for stake to be clamped
-    roller_spin(100);            // wait for stake to be clamped
-    */
+    roller_spin(-100);           // intake starting donut
+    move(200, 20, -20, false);   // turn to red understacked donut
+    move(290, 50, 50, false);    // move to red understacked donut & intake
+    vexDelay(600);               // wait for donut to be intaken
+    move(270, -20, 20, false);   // turn to red overstacked donut at white line
+    intkp(true);                 // lift intake
+    move(960, 50, 50, false);    // move to red overstacked donut at white line
+    vexDelay(600);               // wait
+    intkp(true);                 // press down intake
+    move(100, 50, 50, true);     // move back and intake
+    move(310, 50, -50, false);   // turn to positive corner
+    move(650, 50, 50, false);    // move to positive corner
+    dink(true);                  // open dinkler
+    vexDelay(700);               // wait
+    move(200, -80, 80, false);   // clear positive corner
 }
 
 void auton(void)
