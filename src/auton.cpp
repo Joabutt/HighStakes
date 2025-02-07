@@ -2,60 +2,64 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <cstdint>
 #include "helper.hpp"
 #include "robot.hpp"
 
 void red_negative(void)
 {
-    move(0.01, -10, -10, false);  // move to stake
-    vexDelay(100);                // wait for robot to reach stake
-    mogo(true);                   // clamp stake
-    vexDelay(500);                // wait for stake to be clamped
-    roller_spin(100);             // intake starting donut
-    move(195, 20, -20, false);    // turn to red understacked donut
-    move(220, 20, 20, false);     // move to red understacked donut & intake
-    vexDelay(800);                // wait for donut to be intaken
-    move(110, 20, -20, false);    // turn to red understacked donut at white line
-    move(200, 20, 20, false);     // move to red understacked donut at white line & intake
-    move(40, -20, -20, false);    // move back
-    vexDelay(800);                // wait for donut to be intaken
-    move(7, -20, 20, false);      // turn to second red understacked donut at white line
-    move(200, 20, 20, false);     // move to second red understacked donut at white line & intake
-    vexDelay(800);                // wait for donut to be intaken
-    move(950, -27.5, -15, false); // turn to bar and touch
-    roller_spin(0);               // stop rollers
+    move(630, 40, 40, true);   // move to stake
+    vexDelay(300);             // wait for clamped
+    mogo(true);                // clamp stake
+    roller_spin(-100);         // intake starting donut
+    vexDelay(800);             // wait for donut to be intaken
+    move(240, 20, -20, false); // turn to red understacked donut at white line
+    move(420, 70, 50, false);  // move to red understacked donut at white line & intake
+    vexDelay(1000);            // wait
+    intkp(true);               // lift intake
+    move(470, -55, -10, false); // move back
+    intkp(true);
+    move(500, 30, 15);          // move to red understacked donut & intake
+    move(70, 50, -50, false);  // turn to fourth donut
+    move(70, 40, 40, false);    // intake to fourth donut
+    move(100, 50, 50);      // move to fourth donut
+    roller_spin(-100);
+    move(350, 20, -20, false);    // turn to red overstacked donut at alliance stake
+    vexDelay(400);
+    intkp(true); 
+    move(960, 50, 50, false); // move to red overstacked donut at alliance stake & intake
+    vexDelay(600);            // wait for donut to be intaken
+    intkp(true);
+    vexDelay(700);
+    move(200, 50, 50, true); // Move back
+
+
 }
 
 // Autonomous route for Red Negative
 void red_positive(void)
 {
-    /*
+    lady(2);
     move(630, -30, -30, false);  // move to stake
+    lady(0);
     vexDelay(100);               // wait for robot to reach stake
     mogo(true);                  // clamp stake
     vexDelay(500);               // wait for stake to be clamped
-    roller_spin(100);            // wait for stake to be clamped
-    move(200, -20, 20, false);   // turn to red understacked donut
-    move(290, 20, 20, false);    // move to red understacked donut & intake
-    vexDelay(1800);              // wait for donut to be intaken
-    move(50, -20, -20, false);   // move back
-    move(70, 25, -25, false);    // turn towards positive corner
-    move(200, 30, 30, false);    // move to positive corner
-    move(390, 60, 29, false);    // arc towards positive corner
-    roller_spin(0);              // stop rollers
-    move(120, 30, 30, false);    // move to positive corner
-    move(500, -20, 20, false);   // turn
-    mogo(false);                 // unclamp stake
-    move(640, 10, 50, false);    // turn out
-    move(1000, -40, -40, false); // move towards stake
-    mogo(true);                  // clamp stake
-    vexDelay(500);               // wait for stake to be clamped
-    move(1300, 60, 30, false);    // move towards bar
-
-    dink(true); // open dinkler
-    move(600, 30, 30, false);    // move to positive corner
-    move(300, -30, 30, false); // clear positive corner
-    dink(false); */
+    roller_spin(-100);            // wait for stake to be clamped
+    move(200, -20, 20, false);   // turn to red understacked
+    move(290, 50, 50, false);    // move to red understacked
+    vexDelay(600);              // wait for donut to be intaken
+    move(270, 20, -20, false);   // turn to red understacked donut at white line
+    intkp(true);                // lift intake
+    move(960, 50, 50, false);    // move to red understacked donut at white line & intake
+    vexDelay(600);              // wait for donut to be intaken
+    intkp(true);                // press down intake
+    move(100, 50, 50, true);    // move back
+    move(310, -50, 50, false);   // turn to positive corner
+    move(650, 50, 50, false);   // move to positive corner
+    dink(true);
+    vexDelay(700);
+    move(200, 80, -80, false);
 }
 
 // Autonomous route for Blue Positive
@@ -84,20 +88,13 @@ void blue_positive(void)
 
 void auton(void)
 {
-    red_negative();
+    red_positive();
 }
 
 void skill(void)
 {
     // Implement your skills logic here
 }
-
-const double kP = 0.8;
-const double kI = 0.0;
-const double kD = 0.15;
-const double MIN_DEGREE_THRESHOLD = 1.0; // Minimum degree threshold
-const double TIMEOUT = 5000;             // Timeout in milliseconds
-const double DEGREE_MULTIPLIER = 0.01;   // Multiplier to scale down the degree value
 
 // Custom clamp function
 template <typename T>
@@ -110,59 +107,72 @@ T clamp(T value, T min, T max)
     return value;
 }
 
-void move(double degree, double left, double right, bool invert) {
-    if (invert) std::swap(left, right);
-    if (cfg.rev) goto negate;
-    if (degree < 0) {
-        degree = -degree;
+void move(double degree, double left, double right, bool invert)
+{
+    if (invert)
+    {
+        double temp = left;
+        left = -right;
+        right = -temp;
+    }
 
-    negate:
+    if (cfg.rev)
+    {
         left = -left;
         right = -right;
     }
 
-    // Reset motor encoders
-    for (uint8_t i = 0; i < MOTORS_BASE; i++) {
-        robo_g.base[i].resetPosition();
+    if (degree < 0)
+    {
+        degree = -degree;
+        left = -left;
+        right = -right;
     }
 
-    double error = 0, lastError = 0, integral = 0, derivative = 0;
-    double output = 0;
+    // Reset encoders and gyro
+    for (uint8_t i = 0; i < MOTORS_BASE; i++)
+    {
+        robo_g.base[i].resetPosition();
+    }
+    robo_g.gyro.resetRotation(); // Reset gyro
+
     vex::timer moveTimer;
     moveTimer.clear();
 
-    while (std::fabs(robo_g.base[LF].position(vex::rotationUnits::deg)) < degree) {
-        double currentPosition = std::fabs(robo_g.base[LF].position(vex::rotationUnits::deg));
-        error = degree - currentPosition;
-        integral = (fabs(error) < 5) ? integral + error : 0;
-        derivative = error - lastError;
-        output = (kP * error) + (kI * integral) + (kD * derivative);
-        output = clamp(output, -100.0, 100.0);
-        lastError = error;
+    // PID Constants
+    double Kp = 0.5;  // Proportional constant
+    double Ki = 0.01; // Integral constant
+    double error, integral = 0;
 
-        // **Gyro Correction**
-        double currentHeading = robo_g.gyro.rotation(vex::rotationUnits::deg);
-        double headingError = 0 - currentHeading; // Keeping it straight
-        double headingCorrection = headingError * 0.5; 
+    while (std::fabs(robo_g.base[LF].position(vex::rotationUnits::deg)) < degree)
+    {
+        double headingError = robo_g.gyro.rotation(vex::rotationUnits::deg);
+        integral += headingError;                                  // Accumulate integral error
+        double correction = (Kp * headingError) + (Ki * integral); // PID Correction
 
-        // Apply PID + gyro correction to motor speeds
-        for (uint8_t i = 0; i < MOTORS_BASE; i++) {
-            double correctedSpeed = (i < drive_motors::RF) ? (left + output - headingCorrection)
-                                                           : (right + output + headingCorrection);
-            robo_g.base[i].spin(vex::directionType::fwd, correctedSpeed, vex::percentUnits::pct);
+        for (uint8_t i = 0; i < MOTORS_BASE; i++)
+        {
+            double motorSpeed = (i < drive_motors::RF) ? left : right;
+            if (i < drive_motors::RF)
+            {
+                motorSpeed -= correction; // Adjust left motors
+            }
+            else
+            {
+                motorSpeed += correction; // Adjust right motors
+            }
+            robo_g.base[i].spin(vex::directionType::fwd, motorSpeed, vex::percentUnits::pct);
         }
 
-        // Timeout check
-        if (moveTimer.time(vex::timeUnits::msec) > TIMEOUT) break;
         vex::task::sleep(25);
     }
 
     // Stop motors
-    for (uint8_t i = 0; i < MOTORS_BASE; i++) {
+    for (uint8_t i = 0; i < MOTORS_BASE; i++)
+    {
         robo_g.base[i].stop(vex::brakeType::brake);
     }
 }
-
 
 void turn_until(double degree, double leftSpeed, double rightSpeed, bool invert, double calibrationFactor)
 {
@@ -212,5 +222,33 @@ void turn_until(double degree, double leftSpeed, double rightSpeed, bool invert,
     for (uint8_t i = 0; i < MOTORS_BASE; i++)
     {
         robo_g.base[i].stop(vex::brakeType::brake);
+    }
+}
+
+// Define stages for the "lady" motor
+std::vector<double> stages1 = {30, -60, -300}; // Rotation values for each stage
+uint8_t currentStage1 = 0;                   // Start at stage 0
+
+void lady(double stage)
+{
+    if (stage >= stages1.size())
+    {
+        return; // Prevent invalid stage access
+    }
+
+    double targetRotation = stages1[stage];
+    double currentRotation = robo_g.lady[0].position(vex::rotationUnits::deg);
+
+    // Determine direction and velocity
+    double direction = targetRotation > currentRotation ? 1 : -1;
+    double velocity = direction * 50; // Adjust speed as needed
+
+    // Move the motor to the target stage
+    robo_g.lady[0].spinToPosition(targetRotation, vex::rotationUnits::deg, velocity, vex::velocityUnits::pct, true);
+
+    currentStage1 = stage; // Update current stage
+    if (currentStage1 == 0)
+    {
+        robo_g.lady[0].resetPosition(); // Reset the rotation sensor when reaching stage 0
     }
 }

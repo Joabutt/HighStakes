@@ -12,7 +12,9 @@
  */
 void move(double degree, double left, double right, bool invert = false);
 void turn_until(double degree, double leftSpeed, double rightSpeed, bool invert, double calibrationFactor = 1.05);
+void lady(double stage);
 void auton(void);
 void skill(void);
+
 
 #endif

@@ -45,3 +45,7 @@ void dink(bool open){
     robo_g.dink.set(robo_g.dink.value() ^ 1);
 }
 
+void intkp(bool open){
+    robo_g.intkp.set(robo_g.intkp.value() ^ 1);
+}
+
