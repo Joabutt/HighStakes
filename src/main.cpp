@@ -6,7 +6,7 @@ int main(void)
 {
     vex::competition comp = vex::competition();
     comp.autonomous(auton);
-    comp.drivercontrol(auton);
+    comp.drivercontrol(drive);
     
     return EXIT_SUCCESS;
 }
